@@ -1,11 +1,3 @@
-/* Uart Events Example
-
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -20,7 +12,7 @@
 
 /**
  * This is an example which echos any data it receives on UART back to the sender using RS485 interface in half duplex mode.
-*/
+ */
 #define TAG "RS485_ECHO_APP"
 
 // Configure pins according to your requirements
@@ -59,9 +51,8 @@ static void echo_task(void *arg)
     };
 
     esp_log_level_set(TAG, ESP_LOG_INFO);
-
+    
     ESP_LOGI(TAG, "Start RS485 application test and configure UART.");
-
     ESP_ERROR_CHECK(uart_driver_install(uart_num, BUF_SIZE * 2, 0, 0, NULL, 0));
     ESP_ERROR_CHECK(uart_param_config(uart_num, &uart_config));
 
@@ -92,9 +83,10 @@ static void echo_task(void *arg)
             printf("] \n");
             echo_send(uart_num, "]\r\n", 3);
         } else {
-            // Send the string "kla" when there is no data received
-            echo_send(uart_num, "kla", 3);  // Change length to 3 to send the full string "kla"
-            ESP_ERROR_CHECK(uart_wait_tx_done(uart_num, 10));
+            // Send the message "kla" when no data is received
+            const char* message = "kla";
+            echo_send(uart_num, message, strlen(message));  // Send "kla"
+            ESP_ERROR_CHECK(uart_wait_tx_done(uart_num, 10)); // Wait for transmission to finish
         }
     }
     vTaskDelete(NULL);
